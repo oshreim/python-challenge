@@ -1,1 +1,50 @@
+import os
+import csv  
+file_to_load = os.path.join("resources","election_data.csv") 
+file_to_output= "election_analysis.txt" 
+candidates= [] 
+candidates_votes= {}
+total_votes= 0
+winning_candidate= ""
+winning_count=0 
+
+
+
+
+with open(file_to_load, newline='') as csvfile:
+    csvreader = csv.reader(csvfile, delimiter=',')
+    csv_header = next(csvreader)
+    for row in csvreader:
+        total_votes=total_votes+1 
+        candidate_name=row[2]
+        if candidate_name not in candidates: 
+            candidates.append(candidate_name) 
+            candidates_votes[candidate_name]=0 
+        
+        candidates_votes[candidate_name]=candidates_votes[candidate_name] +1 
+with open(file_to_output,"w") as text_file:
+    results=(
+    f"Election Results\n" 
+    f"-------------------------\n"
+    f"Total Votes: {total_votes}\n" 
+    f"-------------------------\n" 
+    )
+    print(results,end="") 
+    text_file.write(results) 
+    for candidate in candidates_votes: 
+        votes=candidates_votes[candidate]
+        vote_percentage= float(votes)/float(total_votes)*100 
+        if votes > winning_count: 
+            winning_count=votes 
+            winning_candidate=candidate 
+
+        output= f"{candidate}: {vote_percentage:.3f}% ({votes})\n"
+        print(output,end="") 
+        text_file.write(output) 
+    summary=(
+    f"-------------------------\n"
+    f"Winner: {winning_candidate}\n"
+    f"-------------------------\n") 
+    print(summary,end="") 
+    text_file.write(summary) 
 
